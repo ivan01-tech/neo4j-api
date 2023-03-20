@@ -122,6 +122,37 @@ class userController {
 		}
 	}
 
+	/**
+	 * get all user article's
+	 * @param {*} req 
+	 * @param {*} res 
+	 * @returns 
+	 */
+	static async getAllUserArticles(req, res) {
+		const session = dbConnection.connectToDb()
+
+		try {
+			const { id } = req.params
+
+			const currentuser = await UserModel.getUserById(session, id)
+			if (!currentuser.records.length) return res.status(404).json({ message: "user not found !" })
+
+			console.log(currentuser)
+
+			const result = await UserModel.getAllUserArticles(session, id)
+			if (!result.records.length) return res.status(404).json({ message: "articles not found !" })
+
+			const articles = transformResult(result)
+
+			return res.json({ "articles": articles })
+
+		} catch (err) {
+			console.log("err : ", err)
+		} finally {
+			await session.close()
+		}
+	}
+
 }
 
 export default userController

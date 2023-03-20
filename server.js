@@ -3,6 +3,7 @@ dotenv.config()
 import express from "express"
 import rootRoute from "./routes/rootRoute.js"
 import userRoute from "./routes/userRoute.js"
+import articleRoute from "./routes/articleRoute.js"
 
 const app = express()
 
@@ -16,6 +17,9 @@ app.use("/", rootRoute)
 
 // user route
 app.use("/users", userRoute)
+
+// article route
+app.use("/articles", articleRoute)
 
 app.listen(PORT, function () {
 	console.log("Server up and running on http://localhost:" + PORT)
