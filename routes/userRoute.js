@@ -3,9 +3,9 @@ import userController from "../controllers/userController.js"
 const userRoute = express.Router()
 
 userRoute
-	.get("/", function (req, res) {
-		res.end("Hello world from users list")
-	})
+	.get("/", userController.getAllusers)
+	.get("/:id", userController.getUserById)
 	.post("/", userController.createUser)
+	.patch("/:id", userController.updateUserName)
 
 export default userRoute 

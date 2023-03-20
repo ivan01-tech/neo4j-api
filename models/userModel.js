@@ -1,26 +1,41 @@
-// import dbConnection from "../config/dbConnection.js";
-// const session = dbConnection.connectToDb()
+import dbConnection from "../config/dbConnection.js";
+const session = dbConnection.connectToDb()
 
 class UserModel {
-
-	static async getAllUser() {
-		try {
-
-			const result = await session.run()
-			console.log(result)
-		} catch (err) {
-			console.log(err)
-		}
-
+	/**
+	 * to get the list of all users
+	 * @param {*} session 
+	 * @returns 
+	 */
+	static async getAllUsers(session) {
+		return session.run(`match (users:USER) return users`)
+	}
+	/**
+ * to get a users with  a specific id
+ * @param {*} session 
+ * @returns 
+ */
+	static async getUserById(session, id) {
+		return session.run(`match (user:USER {userId:$id}) return user`, { id })
 	}
 	/**
 	 * to create a new user
-	 * @param {*} nameValue 
-	 * @param {*} emailValue 
-	 * @param {*} passwordValue 
+	 * @param {*} name 
+	 * @param {*} email 
+	 * @param {*} password 
 	 */
-	static createUser(session, { nameValue, emailValue, passwordValue }) {
-		return session.run(`create (user:USER {name:{nameValue}, email:{emailValue},password:{passwordValue}})`, { nameValue, emailValue, passwordValue })
+	static createUser(session, { name, email, password, userId }) {
+		return session.run(`create (user:USER {name:$name, userId:$userId ,  email:$email,password:$password}) return user`, { name, email, password, userId },)
+	}
+
+	/**
+	 * update the user name
+	 * @param {*} session 
+	 * @param {*} param1 
+	 * @returns 
+	 */
+	static updateUserName(session, { id, name }) {
+		return session.run(`MATCH (user:USER {userId:$id}) SET user.name = $name return user`, { id, name })
 	}
 }
 
